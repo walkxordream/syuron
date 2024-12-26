@@ -1,14 +1,14 @@
 import os
 import glob
 import datetime
-from PIL import Image
-import re
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
+from PIL import Image
 import torchvision.transforms as T
 from tqdm import tqdm
+import re
 import matplotlib.pyplot as plt
 import csv
 import numpy as np
@@ -24,17 +24,20 @@ def set_seed(seed):
         torch.backends.cudnn.deterministic = True
         torch.backends.cudnn.benchmark = False
 
-def make_models(data_path, batchsize, save_model_dir, seed=42):
+def make_models(data_path, batchsize, model_path, save_model_dir, seed=42):
     # シードを固定
     set_seed(seed)
 
     # data_pathsのひとつ下の階層にあるフォルダを取得
     data_paths = glob.glob(f"{data_path}/*")
+    # ソートすることで、データの順番を固定する
+    data_paths = sorted(data_paths)
     l = list(data_paths)
     # 今日の日付を取得
     ll = datetime.datetime.now().strftime('%Y%m%d')
     for i in range(len(l)):
-
+        print(str(i + 1) + "個目のモデル作成を始めました！")
+        print(l[i], model_path[i])
         dir_path = l[i]
         study_data = glob.glob(f"{dir_path}/*")
         print(f"good {len(study_data)}")
@@ -61,6 +64,7 @@ def make_models(data_path, batchsize, save_model_dir, seed=42):
         val_dataset = Custom_Dataset(val_list)
         train_loader = DataLoader(train_dataset, batch_size=batchsize, shuffle=True)
         val_loader = DataLoader(val_dataset, batch_size=batchsize, shuffle=True)
+
 
         class DeepAutoencoder(nn.Module):
             def __init__(self):
@@ -104,6 +108,7 @@ def make_models(data_path, batchsize, save_model_dir, seed=42):
                     nn.Conv2d(3, 3, kernel_size=3, stride=1, padding=1),
                 )
 
+
             def forward(self, x):
                 x = self.Encoder(x)
                 x = self.Decoder(x)
@@ -117,7 +122,7 @@ def make_models(data_path, batchsize, save_model_dir, seed=42):
         best_loss = None
         # modelをGPU用に用意
         model = DeepAutoencoder().to(device)
-
+        model.load_state_dict(torch.load(model_path[i]))
         # 連続学習回数にも制限を用意
         limit_epoch = 30
 
@@ -130,9 +135,9 @@ def make_models(data_path, batchsize, save_model_dir, seed=42):
         # 損失を記録するリスト
         train_losses = []
         val_losses = []
-        # 保存先のディレクトリがなければ作成
-        if not os.path.exists(save_model_dir):
-            os.makedirs(save_model_dir)
+
+        # 保存先のディレクトリを作成
+        os.makedirs(save_model_dir, exist_ok=True)
 
         for e in range(epoch_num):
             total_loss = 0
@@ -167,8 +172,8 @@ def make_models(data_path, batchsize, save_model_dir, seed=42):
                 if best_loss is not None:
                     print(f"update best_loss {best_loss:.6f} to {total_loss/(itr+1):.6f}")
                 best_loss = total_loss/(itr+1)
-                model_path = f"{save_model_dir}/{len(study_data)}_AEdeepmodel_{ll}_{os.path.basename(l[i])}.pth"
-                torch.save(model.state_dict(), model_path)
+                save_model_path = f"{save_model_dir}/{len(study_data)}_fineAEdeepmodel_{ll}_{os.path.basename(l[i])}.pth"
+                torch.save(model.state_dict(), save_model_path)
                 counter = 0
             else:
                 counter += 1
@@ -181,14 +186,13 @@ def make_models(data_path, batchsize, save_model_dir, seed=42):
         plt.plot(val_losses, label='Validation Loss')
         plt.xlabel('Epoch')
         plt.ylabel('Loss')
-        plt.yscale('log')  # 縦軸を対数表記に設定
         plt.legend()
         plt.title('Training and Validation Loss')
-        plt.savefig(f'imgs/result_img/loss_plot_{ll}_{os.path.basename(l[i])}.png')
+        plt.savefig(f'imgs/result_img/loss_plot_{ll}_fine{os.path.basename(l[i])}.png')
         plt.close()
 
         # 損失の値の推移をCSVファイルに書き込む
-        csv_path = f'imgs/result_img/loss_plot_{ll}_{os.path.basename(l[i])}.csv'
+        csv_path = f'imgs/result_img/loss_plot_{ll}_fine{os.path.basename(l[i])}.csv'
         with open(csv_path, mode='w', newline='') as file:
             writer = csv.writer(file)
             writer.writerow(['Epoch', 'Train Loss', 'Validation Loss'])
@@ -197,18 +201,22 @@ def make_models(data_path, batchsize, save_model_dir, seed=42):
                 val_loss = val_losses[epoch] if epoch < len(val_losses) else ''
                 writer.writerow([epoch + 1, train_loss, val_loss])
 
+        print(str(i + 1) + "個目のモデル作成が終了しました！")
+
 # 最後の数字を抽出する関数
 def extract_last_number(path):
     match = re.search(r'_(\d+)$', path)
     return match.group(1) if match else None
 
 if __name__ == "__main__":
-    data_pathss = list(glob.glob("imgs/old_train_img3/*"))
-    save_model_dir = "models/old_models6048"
+    data_pathss = list(glob.glob("imgs/update_train_imgs_default/*"))
+    modelpaths = glob.glob("models/old_models6048/*")
+    modelpaths = sorted(modelpaths)
+    save_model_dir = "models/fine_model_paths"
     batchs = {100: 8, 1000: 32, 3000: 64, 5000: 128, 6048: 256}
     for data_paths in data_pathss:
         last_number = extract_last_number(data_paths)
         batch_size = batchs[int(last_number)]
         data_paths = list(glob.glob(f"{data_paths}/*"))
         for data_path in data_paths:
-            make_models(data_path, batch_size, save_model_dir)
+            make_models(data_path, batch_size, modelpaths, save_model_dir)

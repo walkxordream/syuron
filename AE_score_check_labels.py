@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[2]:
+# In[1]:
 
 
 import glob
@@ -9,6 +9,7 @@ import re
 import cv2
 import numpy as np
 import os
+import random
 import torchvision.transforms as T
 import torch.nn as nn
 import torch
@@ -18,6 +19,24 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.cluster import KMeans
 from ipywidgets import interact, FloatSlider
 get_ipython().run_line_magic('matplotlib', 'inline')
+
+
+# In[2]:
+
+
+# シードを固定する関数
+def set_seed(seed):
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed(seed)
+        torch.cuda.manual_seed_all(seed)
+        torch.backends.cudnn.deterministic = True
+        torch.backends.cudnn.benchmark = False
+
+# シードを固定
+set_seed(42)
 
 
 # In[3]:
@@ -103,7 +122,7 @@ def AE(IMGS, models):
     return score_lists
 
 
-# In[ ]:
+# In[5]:
 
 
 def get_image_filenames(directory):
@@ -207,15 +226,15 @@ def pca2_kmeans(pca_score_lists2):
     plt.show()
 
 
-# In[8]:
+# In[7]:
 
 
-# 使用例
+# ここからメイン
 files_path = "imgs/make_pca_img1000"
 images, image_filenames = load_images(files_path)
 
 # モデルのパス
-model_paths = ["models/for_make_model/6048_AEdeepmodel_20241217_A_train_img.pth"]
+model_paths = ["models/old_models6048/6048_AEdeepmodel_20241224_A_train_img.pth"]
 # モデルの読み込み
 models = make_models(model_paths)
 
@@ -228,13 +247,13 @@ switch_indices = find_label_switch_indices(image_filenames)
 labels = [filename.split('_')[0] for filename in image_filenames]
 
 
-# In[9]:
+# In[8]:
 
 
 pca_check(score_lists)
 
 
-# In[10]:
+# In[9]:
 
 
 # PCAを適用
@@ -244,7 +263,7 @@ pca_score_lists2 = pca_n(score_lists,2)
 plt_pca2(pca_score_lists2,labels)
 
 
-# In[11]:
+# In[10]:
 
 
 pca2_kmeans(pca_score_lists2)
