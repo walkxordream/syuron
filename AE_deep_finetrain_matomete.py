@@ -108,7 +108,6 @@ def make_models(data_path, batchsize, model_path, save_model_dir, seed=42):
                     nn.Conv2d(3, 3, kernel_size=3, stride=1, padding=1),
                 )
 
-
             def forward(self, x):
                 x = self.Encoder(x)
                 x = self.Decoder(x)
@@ -186,13 +185,14 @@ def make_models(data_path, batchsize, model_path, save_model_dir, seed=42):
         plt.plot(val_losses, label='Validation Loss')
         plt.xlabel('Epoch')
         plt.ylabel('Loss')
+        plt.yscale('log')  # 縦軸を対数表記に設定
         plt.legend()
         plt.title('Training and Validation Loss')
-        plt.savefig(f'imgs/result_img/loss_plot_{ll}_fine{os.path.basename(l[i])}.png')
+        plt.savefig(f'imgs/result_img/loss_plot_{ll}_fine{len(study_data)}_{os.path.basename(l[i])}.png')
         plt.close()
 
         # 損失の値の推移をCSVファイルに書き込む
-        csv_path = f'imgs/result_img/loss_plot_{ll}_fine{os.path.basename(l[i])}.csv'
+        csv_path = f'imgs/result_img/loss_plot_{ll}_fine{len(study_data)}_{os.path.basename(l[i])}.csv'
         with open(csv_path, mode='w', newline='') as file:
             writer = csv.writer(file)
             writer.writerow(['Epoch', 'Train Loss', 'Validation Loss'])
@@ -209,10 +209,10 @@ def extract_last_number(path):
     return match.group(1) if match else None
 
 if __name__ == "__main__":
-    data_pathss = list(glob.glob("imgs/update_train_imgs_default/*"))
+    data_pathss = list(glob.glob("imgs/update_train_imgs_default_mix/*"))
     modelpaths = glob.glob("models/old_models6048/*")
     modelpaths = sorted(modelpaths)
-    save_model_dir = "models/fine_model_paths"
+    save_model_dir = "models/d_finemodels_100_5000"
     batchs = {100: 8, 1000: 32, 3000: 64, 5000: 128, 6048: 256}
     for data_paths in data_pathss:
         last_number = extract_last_number(data_paths)
