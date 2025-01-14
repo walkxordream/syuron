@@ -98,30 +98,27 @@ def make_models(model_paths):
         models.append(model)
     return models
 
-
 def AE(IMG, models):
-    min_sum = float('inf')
-    max_area = float('inf')
-    prepocess = T.Compose([T.ToTensor()])
+    min_mse = float('inf')
+    best_area = 0
+    preprocess = T.Compose([T.ToTensor()])
 
     for model in models:
         model.eval()
-        img = prepocess(IMG).unsqueeze(0).cuda()
+        img = preprocess(IMG).unsqueeze(0).cuda()
         with torch.no_grad():
             output = model(img)[0]
-        output = output.cpu().numpy().transpose(1,2,0)
-        output = np.uint8(np.maximum(np.minimum(output*255 ,255),0))
-        origin = np.uint8(img[0].cpu().numpy().transpose(1,2,0)*255)
+        output = output.cpu().numpy().transpose(1, 2, 0)
+        output = np.uint8(np.maximum(np.minimum(output * 255, 255), 0))
+        origin = np.uint8(img[0].cpu().numpy().transpose(1, 2, 0) * 255)
         diff = np.uint8(np.abs(output.astype(np.float32) - origin.astype(np.float32)))
+        mse = np.mean((diff.astype(np.float32)) ** 2)
         area = findcontours(diff)
-        min_sum = min(min_sum, diff.sum())
-        max_area = min(max_area, area)
-
-#差分画像の面積がしきい値より小さければ、物体の面積を返す
-    if min_sum < 2400000:
-        return max_area
-    else:
-        return 0
+        
+        if mse < min_mse:
+            min_mse = mse
+            best_area = area
+    return best_area
 
 def split(files):
     # 画像分割サイズ

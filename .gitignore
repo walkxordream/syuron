@@ -2,6 +2,8 @@
 *jpg
 *jpeg
 *png
+# imgs/result_imgディレクトリ内のPNGファイルは追跡
+!imgs/result_img/*.png
 *JPG
 **/logs/
 **/wandb/
