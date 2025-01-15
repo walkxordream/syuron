@@ -161,6 +161,19 @@ def autoencoder(IMAGES, models):
 
     return AE_YES_img, AE_YES_position
 
+
+def get_image_filenames(directory):
+    # 指定されたディレクトリ内の画像ファイル名を取得
+    return set(f for f in os.listdir(directory) if f.lower().endswith(('.png', '.jpg', '.jpeg')))
+
+def count_common_images(dir1, dir2):
+    # 2つのディレクトリ内の共通の画像ファイル名をカウント
+    images_dir1 = get_image_filenames(dir1)
+    images_dir2 = get_image_filenames(dir2)
+    
+    common_images = images_dir1.intersection(images_dir2)
+    return len(common_images)
+
 # メインの処理を行う関数
 def main():
     model_paths = ["models/2023models/AEmodel_dark_green20230927.pth","models/2023models/AEmodel_light_green20230927.pth","models/2023models/AEmodel_paved_ground20230927.pth","models/2023models/AEmodel_white20230927.pth"]
@@ -182,7 +195,12 @@ def main():
 
 if __name__ == "__main__":
     img_list,posision_list = main()
-    print(posision_list)
+    # 共通の画像ファイルの枚数をカウント
+    directory1 = "imgs/AE_2023_result"
+    directory2 = "imgs/test_objects"
+    common_image_count = count_common_images(directory1, directory2)
+    print(f"共通の画像ファイルの枚数: {common_image_count}")
+    # print(posision_list)
     # for i in range(len(img_list)):
     #     cv2.imshow('image', img_list[i])
     #     cv2.waitKey(0)
