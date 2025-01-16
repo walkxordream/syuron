@@ -209,10 +209,10 @@ def extract_last_number(path):
     return match.group(1) if match else None
 
 if __name__ == "__main__":
-    data_pathss = list(glob.glob("imgs/update_train_imgs_default_mix/*"))
+    data_pathss = list(glob.glob("imgs/update_train_imgs_remove_mix/*"))
     modelpaths = glob.glob("models/old_models6048/*")
     modelpaths = sorted(modelpaths)
-    save_model_dir = "models/d_finemodels_100_5000"
+    save_model_dir = "models/fine_model_paths"
     batchs = {100: 8, 1000: 32, 3000: 64, 5000: 128, 6048: 256}
     for data_paths in data_pathss:
         last_number = extract_last_number(data_paths)

@@ -174,6 +174,17 @@ def count_common_images(dir1, dir2):
     common_images = images_dir1.intersection(images_dir2)
     return len(common_images)
 
+def calculate_f2_score(tp, fp, fn):
+    # PrecisionとRecallを計算
+    precision = tp / (tp + fp) if (tp + fp) > 0 else 0
+    recall = tp / (tp + fn) if (tp + fn) > 0 else 0
+    
+    # F2スコアを計算
+    if precision + recall == 0:
+        return 0
+    f2_score = (5 * precision * recall) / (4 * precision + recall)
+    return f2_score
+
 # メインの処理を行う関数
 def main():
     model_paths = ["models/2023models/AEmodel_dark_green20230927.pth","models/2023models/AEmodel_light_green20230927.pth","models/2023models/AEmodel_paved_ground20230927.pth","models/2023models/AEmodel_white20230927.pth"]
@@ -194,24 +205,36 @@ def main():
     return img_list, posision_list
 
 if __name__ == "__main__":
-    img_list,posision_list = main()
+    img_list, posision_list = main()
+    
     # 共通の画像ファイルの枚数をカウント
     directory1 = "imgs/AE_2023_result"
     directory2 = "imgs/test_objects"
-    common_image_count = count_common_images(directory1, directory2)
-    print(f"共通の画像ファイルの枚数: {common_image_count}")
-    # print(posision_list)
-    # for i in range(len(img_list)):
-    #     cv2.imshow('image', img_list[i])
-    #     cv2.waitKey(0)
-    #     cv2.destroyAllWindows()
-    
+    tp = count_common_images(directory1, directory2)
+    print(f"共通の画像ファイルの枚数 (TP): {tp}")
 
+    # 正解の物体数
+    total_objects = 50
 
+    # 推論結果の画像の枚数 (FP)
+    fp = len(get_image_filenames(directory1)) - tp
 
+    # 分割後の画像の枚数 (全体の画像数)
+    split_directory = "imgs/test_img"
+    total_images = len(split(glob.glob(os.path.join(split_directory, "*.JPG"))))
 
+    # False Negatives (FN) を計算
+    fn = total_objects - tp
 
+    # True Negatives (TN) を計算
+    tn = total_images - fp - fn 
 
-
+    # F2スコアを計算
+    f2_score = calculate_f2_score(tp, fp, fn)
+    print(f"推論結果の画像の枚数 (FP): {fp}")
+    print(f"全体の画像の枚数 (Total): {total_images}")
+    print(f"False Negatives (FN): {fn}")
+    print(f"True Negatives (TN): {tn}")
+    print(f"F2スコア: {f2_score}")
 
 

@@ -1,0 +1,51 @@
+もし移動しなかったらnoに入っている物体の画像の割合は1.26%
+imgs/clip_result_remove/high/dark/yesなのにno に移動した画像の枚数: 12
+imgs/update_img_remove/dark_object の総参照画像枚数: 306
+imgs/update_img_remove/dark_object の正答率: 96.08%
+もし移動しなかったらnoに入っている物体の画像の割合は11.76%
+imgs/clip_result_remove/high/light/yesなのにno に移動した画像の枚数: 60
+imgs/update_img_remove/light_object の総参照画像枚数: 1703
+imgs/update_img_remove/light_object の正答率: 96.48%
+もし移動しなかったらnoに入っている物体の画像の割合は20.51%
+imgs/clip_result_remove/high/white/yesなのにno に移動した画像の枚数: 97
+imgs/update_img_remove/white_object の総参照画像枚数: 1925
+imgs/update_img_remove/white_object の正答率: 94.96%
+もし移動しなかったらnoに入っている物体の画像の割合は4.64%
+imgs/clip_result_remove/low/dark/yesなのにno に移動した画像の枚数: 212
+imgs/update_img_remove/dark_object の総参照画像枚数: 306
+imgs/update_img_remove/dark_object の正答率: 30.72%
+もし移動しなかったらnoに入っている物体の画像の割合は15.13%
+imgs/clip_result_remove/low/light/yesなのにno に移動した画像の枚数: 1188
+imgs/update_img_remove/light_object の総参照画像枚数: 1703
+imgs/update_img_remove/light_object の正答率: 30.24%
+もし移動しなかったらnoに入っている物体の画像の割合は29.98%
+imgs/clip_result_remove/low/white/yesなのにno に移動した画像の枚数: 890
+imgs/update_img_remove/white_object の総参照画像枚数: 1925
+imgs/update_img_remove/white_object の正答率: 53.77%
+画像の移動が完了しました。
+
+もし移動しなかったらnoに入っている物体の画像の割合は1.26%
+imgs/clip_result_remove/high/dark/yesなのにno に移動した画像の枚数: 12
+imgs/update_img_remove/dark_object の総参照画像枚数: 306
+imgs/update_img_remove/dark_object の正答率: 96.08%
+もし移動しなかったらnoに入っている物体の画像の割合は11.76%
+imgs/clip_result_remove/high/light/yesなのにno に移動した画像の枚数: 60
+imgs/update_img_remove/light_object の総参照画像枚数: 1703
+imgs/update_img_remove/light_object の正答率: 96.48%
+もし移動しなかったらnoに入っている物体の画像の割合は20.51%
+imgs/clip_result_remove/high/white/yesなのにno に移動した画像の枚数: 97
+imgs/update_img_remove/white_object の総参照画像枚数: 1925
+imgs/update_img_remove/white_object の正答率: 94.96%
+もし移動しなかったらnoに入っている物体の画像の割合は4.64%
+imgs/clip_result_remove/low/dark/yesなのにno に移動した画像の枚数: 210
+imgs/update_img_remove/dark_object の総参照画像枚数: 306
+imgs/update_img_remove/dark_object の正答率: 31.37%
+もし移動しなかったらnoに入っている物体の画像の割合は15.33%
+imgs/clip_result_remove/low/light/yesなのにno に移動した画像の枚数: 1170
+imgs/update_img_remove/light_object の総参照画像枚数: 1703
+imgs/update_img_remove/light_object の正答率: 31.30%
+もし移動しなかったらnoに入っている物体の画像の割合は29.98%
+imgs/clip_result_remove/low/white/yesなのにno に移動した画像の枚数: 888
+imgs/update_img_remove/white_object の総参照画像枚数: 1925
+imgs/update_img_remove/white_object の正答率: 53.87%
+画像の移動が完了しました。
